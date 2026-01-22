@@ -1,0 +1,4 @@
+printf '* text=auto\n*.sh text eol=lf\n' > .gitattributes
+git add .gitattributes
+git commit -m "Enforce LF for shell scripts"
+git push
