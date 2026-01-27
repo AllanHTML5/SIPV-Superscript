@@ -577,7 +577,8 @@ services:
         condition: service_healthy
     ports:
       - "${WEB_BIND_IP}:${WEB_PORT}:8000"
-    command: bash -lc "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: bash -lc "python manage.py runserver 0.0.0.0:8000"
+
     networks: [sipv_net]
 
   adminer:
@@ -966,16 +967,17 @@ start_stack() {
   wait_for_mysql_primary_healthy
   ensure_mysql_db_user
 
-  log "Levantando todo el stack..."
-  $cmd up -d --force-recreate
-
   apply_migrations
   collectstatic_if_prod
   create_superuser_always
 
+  log "Levantando web + adminer..."
+  $cmd up -d --force-recreate web adminer
+
   write_summary
   print_summary
 }
+
 
 main() {
   local os
